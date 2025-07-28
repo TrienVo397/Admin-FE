@@ -2,48 +2,77 @@ import {
   DateField,
   DeleteButton,
   EditButton,
+  FilterDropdown,
   List,
-  MarkdownField,
   ShowButton,
   useTable,
 } from "@refinedev/antd";
-import { type BaseRecord, useMany } from "@refinedev/core";
-import { Space, Table } from "antd";
+import { type BaseRecord } from "@refinedev/core";
+import { Space, Table, Input, Select } from "antd";
 import React from "react";
 
 export const BlogPostList = () => {
   const { tableProps } = useTable({
     syncWithLocation: true,
-  });
-
-  const { data: categoryData, isLoading: categoryIsLoading } = useMany({
-    resource: "categories",
-    ids:
-      tableProps?.dataSource
-        ?.map((item) => item?.category?.id)
-        .filter(Boolean) ?? [],
-    queryOptions: {
-      enabled: !!tableProps?.dataSource,
+    onSearch: (params: any) => {
+      return [
+        {
+          field: "title",
+          operator: "contains",
+          value: params.title,
+        },
+        {
+          field: "status",
+          operator: "eq",
+          value: params.status,
+        }
+      ];
     },
   });
 
   return (
-    <List 
-      createButtonProps={{ children: "Create New Post" }}
-      title="Blog Posts"
+    <List
+      createButtonProps={{ children: "Create" }}
+      title="Users"
     >
       <Table {...tableProps} rowKey="id">
         <Table.Column dataIndex="id" title={"ID"} />
-        <Table.Column dataIndex="title" title={"Title"} />
         <Table.Column
+          dataIndex="title"
+          title={"User Name"}
+          filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+              <Input placeholder="Search username" />
+            </FilterDropdown>
+          )}
+        />
+        <Table.Column
+          dataIndex="status"
+          title={"Status"}
+          filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+              <Select
+                style={{ width: 200 }}
+                placeholder="Select status"
+                allowClear
+                options={[
+                  { value: "draft", label: "Draft" },
+                  { value: "published", label: "Published" },
+                  { value: "rejected", label: "Rejected" },
+                ]}
+              />
+            </FilterDropdown>
+          )}
+        />
+        {/* <Table.Column
           dataIndex="content"
           title={"Content"}
           render={(value: any) => {
             if (!value) return "-";
             return <MarkdownField value={value.slice(0, 80) + "..."} />;
           }}
-        />
-        <Table.Column
+        /> */}
+        {/* <Table.Column
           dataIndex={"category"}
           title={"Category"}
           render={(value) =>
@@ -53,8 +82,7 @@ export const BlogPostList = () => {
               categoryData?.data?.find((item) => item.id === value?.id)?.title
             )
           }
-        />
-        <Table.Column dataIndex="status" title={"Status"} />
+        /> */}
         <Table.Column
           dataIndex={["createdAt"]}
           title={"Created at"}

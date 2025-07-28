@@ -10,6 +10,7 @@ import { Space, Table } from "antd";
 import React from "react";
 
 export const CategoryList = () => {
+  
   const { tableProps } = useTable({
     syncWithLocation: true,
   });

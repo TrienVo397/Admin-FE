@@ -24,6 +24,7 @@ import routerBindings, {
   UnsavedChangesNotifier,
   DocumentTitleHandler,
 } from "@refinedev/react-router";
+import { UserOutlined, ProjectOutlined } from "@ant-design/icons";
 import {
   BlogPostList,
   BlogPostCreate,
@@ -60,7 +61,8 @@ function App() {
                     show: "/blog-posts/show/:id",
                     meta: {
                       canDelete: true,
-                      label: "Blog Posts",
+                      label: "Users",
+                      icon: <UserOutlined />,
                     },
                   },
                   {
@@ -71,6 +73,8 @@ function App() {
                     show: "/categories/show/:id",
                     meta: {
                       canDelete: true,
+                       label: "Projects",
+                      icon: <ProjectOutlined />,
                     },
                   },
                 ]}
@@ -79,7 +83,7 @@ function App() {
                   warnWhenUnsavedChanges: true,
                   useNewQueryKeys: true,
                   projectId: "fCotI0-lfG9co-5GCXK7",
-                  title: { text: "", icon: <AppIcon /> },
+                  title: { text: "SkyTest", icon: <AppIcon /> },
                 }}
               >
                 <Routes>
