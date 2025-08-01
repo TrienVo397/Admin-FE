@@ -30,13 +30,14 @@ import {
   BlogPostCreate,
   BlogPostEdit,
   BlogPostShow,
-} from "./pages/blog-posts";
+} from "./pages/users";
 import {
-  CategoryList,
-  CategoryCreate,
-  CategoryEdit,
-  CategoryShow,
-} from "./pages/categories";
+ ProjectList,
+ ProjectCreate,
+ ProjectEdit,
+ ProjectShow,
+} from "./pages/projects";
+
 import { AppIcon } from "./components/app-icon";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 import { Header } from "./components/header";
@@ -66,11 +67,11 @@ function App() {
                     },
                   },
                   {
-                    name: "categories",
-                    list: "/categories",
-                    create: "/categories/create",
-                    edit: "/categories/edit/:id",
-                    show: "/categories/show/:id",
+                    name: "categories",// name helps to find the resource endpoint
+                    list: "/projects",
+                    create: "/projects/create",
+                    edit: "/projects/edit/:id",
+                    show: "/projects/show/:id",
                     meta: {
                       canDelete: true,
                        label: "Projects",
@@ -107,11 +108,11 @@ function App() {
                       <Route path="edit/:id" element={<BlogPostEdit />} />
                       <Route path="show/:id" element={<BlogPostShow />} />
                     </Route>
-                    <Route path="/categories">
-                      <Route index element={<CategoryList />} />
-                      <Route path="create" element={<CategoryCreate />} />
-                      <Route path="edit/:id" element={<CategoryEdit />} />
-                      <Route path="show/:id" element={<CategoryShow />} />
+                    <Route path="/projects">
+                      <Route index element={<ProjectList />} />
+                      <Route path="create" element={<ProjectCreate />} />
+                      <Route path="edit/:id" element={<ProjectEdit />} />
+                      <Route path="show/:id" element={<ProjectShow />} />
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
@@ -119,7 +120,16 @@ function App() {
 
                 <RefineKbar />
                 <UnsavedChangesNotifier />
-                <DocumentTitleHandler />
+                <DocumentTitleHandler handler={({ resource }) => { // tab title
+                  const resourceLabel = resource?.meta?.label || resource?.label || resource?.name;
+                  let title = "SkyTest";
+                  
+                  if (resourceLabel) {
+                    title = `${resourceLabel} | ${title}`;
+                  }
+                  
+                  return title;
+                }} />
               </Refine>
             </DevtoolsProvider>
           </AntdApp>
