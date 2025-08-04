@@ -16,6 +16,7 @@ import {
 import "@refinedev/antd/dist/reset.css";
 
 import dataProvider from "@refinedev/simple-rest";
+import { localDataProvider } from "./providers/localDataProvider";
 import { App as AntdApp } from "antd";
 import { BrowserRouter, Route, Routes, Outlet } from "react-router";
 import routerBindings, {
@@ -26,17 +27,15 @@ import routerBindings, {
 } from "@refinedev/react-router";
 import { UserOutlined, ProjectOutlined } from "@ant-design/icons";
 import {
-  BlogPostList,
-  BlogPostCreate,
-  BlogPostEdit,
-  BlogPostShow,
-} from "./pages/users";
+  UserList,
+  UserCreate,
+  UserEdit,
+  UserShow,
+} from "./pages/users/index.new";
 import {
  ProjectList,
  ProjectCreate,
- ProjectEdit,
- ProjectShow,
-} from "./pages/projects";
+} from "./pages/projects/index.new";
 
 import { AppIcon } from "./components/app-icon";
 import { ColorModeContextProvider } from "./contexts/color-mode";
@@ -50,16 +49,16 @@ function App() {
           <AntdApp>
             <DevtoolsProvider>
               <Refine
-                dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
+                dataProvider={localDataProvider}
                 notificationProvider={useNotificationProvider}
                 routerProvider={routerBindings}
                 resources={[
                   {
-                    name: "blog_posts",
-                    list: "/blog-posts",
-                    create: "/blog-posts/create",
-                    edit: "/blog-posts/edit/:id",
-                    show: "/blog-posts/show/:id",
+                    name: "users",
+                    list: "/users",
+                    create: "/users/create",
+                    edit: "/users/edit/:id",
+                    show: "/users/show/:id",
                     meta: {
                       canDelete: true,
                       label: "Users",
@@ -67,7 +66,7 @@ function App() {
                     },
                   },
                   {
-                    name: "categories",// name helps to find the resource endpoint
+                    name: "projects",
                     list: "/projects",
                     create: "/projects/create",
                     edit: "/projects/edit/:id",
@@ -100,19 +99,19 @@ function App() {
                   >
                     <Route
                       index
-                      element={<NavigateToResource resource="blog_posts" />}
+                      element={<NavigateToResource resource="users" />}
                     />
-                    <Route path="/blog-posts">
-                      <Route index element={<BlogPostList />} />
-                      <Route path="create" element={<BlogPostCreate />} />
-                      <Route path="edit/:id" element={<BlogPostEdit />} />
-                      <Route path="show/:id" element={<BlogPostShow />} />
+                    <Route path="/users">
+                      <Route index element={<UserList />} />
+                      <Route path="create" element={<UserCreate />} />
+                      <Route path="edit/:id" element={<UserEdit />} />
+                      <Route path="show/:id" element={<UserShow />} />
                     </Route>
                     <Route path="/projects">
                       <Route index element={<ProjectList />} />
                       <Route path="create" element={<ProjectCreate />} />
-                      <Route path="edit/:id" element={<ProjectEdit />} />
-                      <Route path="show/:id" element={<ProjectShow />} />
+                      <Route path="edit/:id" element={<div>Project Edit - Coming Soon</div>} />
+                      <Route path="show/:id" element={<div>Project Show - Coming Soon</div>} />
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>

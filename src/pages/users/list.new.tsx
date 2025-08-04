@@ -11,7 +11,7 @@ import { type BaseRecord } from "@refinedev/core";
 import { Space, Table, Input, Select } from "antd";
 import React from "react";
 
-export const BlogPostList = () => {
+export const UserList = () => {
   const { tableProps } = useTable({
     syncWithLocation: true,
     onSearch: (params: any) => {
@@ -99,43 +99,8 @@ export const BlogPostList = () => {
             </FilterDropdown>
           )}
         />
-          title={"Status"}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Select
-                style={{ width: 200 }}
-                placeholder="Select status"
-                allowClear
-                options={[
-                  { value: "draft", label: "Draft" },
-                  { value: "published", label: "Published" },
-                  { value: "rejected", label: "Rejected" },
-                ]}
-              />
-            </FilterDropdown>
-          )}
-        />
-        {/* <Table.Column
-          dataIndex="content"
-          title={"Content"}
-          render={(value: any) => {
-            if (!value) return "-";
-            return <MarkdownField value={value.slice(0, 80) + "..."} />;
-          }}
-        /> */}
-        {/* <Table.Column
-          dataIndex={"category"}
-          title={"Category"}
-          render={(value) =>
-            categoryIsLoading ? (
-              <>Loading...</>
-            ) : (
-              categoryData?.data?.find((item) => item.id === value?.id)?.title
-            )
-          }
-        /> */}
         <Table.Column
-          dataIndex={["createdAt"]}
+          dataIndex={["created_at"]}
           title={"Created at"}
           render={(value: any) => <DateField value={value} />}
         />
