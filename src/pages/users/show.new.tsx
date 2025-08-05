@@ -1,6 +1,6 @@
-import { Show } from "@refinedev/antd";
+import { Show, Edit, useForm } from "@refinedev/antd";
 import { useShow, useList } from "@refinedev/core";
-import { Typography, Card, Row, Col, Tag, Table, Space } from "antd";
+import { Typography, Card, Row, Col, Tag, Table, Space, Form, Input, Select } from "antd";
 import { UserOutlined, MailOutlined, CalendarOutlined, ProjectOutlined } from "@ant-design/icons";
 import React from "react";
 
@@ -12,12 +12,12 @@ export const UserShow = () => {
 
   const record = data?.data;
 
-  // Get projects associated with this user
+  // Get projects created by this user
   const { data: projectsData, isLoading: projectsLoading } = useList({
     resource: "projects",
     filters: [
       {
-        field: "owner_id",
+        field: "created_by",
         operator: "eq",
         value: record?.id,
       },
@@ -39,9 +39,9 @@ export const UserShow = () => {
       ),
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "Note",
+      dataIndex: "note",
+      key: "note",
       render: (text: string) => (
         <Text ellipsis={{ tooltip: text }} style={{ maxWidth: 300 }}>
           {text}
@@ -49,37 +49,26 @@ export const UserShow = () => {
       ),
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status: string) => {
-        const colors = {
-          active: "green",
-          in_development: "orange",
-          testing: "blue",
-          completed: "purple",
-        };
-        return (
-          <Tag color={colors[status as keyof typeof colors] || "default"}>
-            {status === "in_development" ? "In Development" : 
-             status.charAt(0).toUpperCase() + status.slice(1)}
-          </Tag>
-        );
-      },
+      title: "Repository",
+      dataIndex: "repo_path",
+      key: "repo_path",
+      render: (path: string) => (
+        <Text code style={{ fontSize: "12px" }}>
+          {path || "Not specified"}
+        </Text>
+      ),
     },
     {
-      title: "Tech Stack",
-      dataIndex: "tech_stack",
-      key: "tech_stack",
-      render: (techStack: string[]) => (
-        <>
-          {techStack?.map((tech) => (
-            <Tag key={tech} color="blue">
-              {tech}
-            </Tag>
-          ))}
-        </>
-      ),
+      title: "Start Date",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (date: string) => date ? new Date(date).toLocaleDateString() : "Not set",
+    },
+    {
+      title: "End Date",
+      dataIndex: "end_date",
+      key: "end_date",
+      render: (date: string) => date ? new Date(date).toLocaleDateString() : "Not set",
     },
     {
       title: "Created",
@@ -101,7 +90,7 @@ export const UserShow = () => {
                   {record.full_name}
                 </Title>
               </Col>
-              
+
               <Col xs={24} sm={12} md={8}>
                 <Card size="small" title="Basic Details">
                   <Space direction="vertical" style={{ width: "100%" }}>
@@ -122,16 +111,31 @@ export const UserShow = () => {
                   </Space>
                 </Card>
               </Col>
-              
+
               <Col xs={24} sm={12} md={8}>
-                <Card size="small" title="Status">
+                <Card size="small" title="Profile Information">
                   <Space direction="vertical" style={{ width: "100%" }}>
                     <div>
-                      <Text strong>Status: </Text>
-                      <Tag color={record.is_active ? "green" : "red"}>
-                        {record.is_active ? "Active" : "Inactive"}
-                      </Tag>
+                      <Text strong>Notes: </Text>
+                      <Text>{record.notes || "No notes available"}</Text>
                     </div>
+                    <div>
+                      <Text strong>Roles: </Text>
+                      <div style={{ marginTop: 4 }}>
+                        {record.roles?.map((role: string) => (
+                          <Tag key={role} color="blue" style={{ marginBottom: 4 }}>
+                            {role.charAt(0).toUpperCase() + role.slice(1).replace('_', ' ')}
+                          </Tag>
+                        )) || <Text type="secondary">No roles assigned</Text>}
+                      </div>
+                    </div>
+                  </Space>
+                </Card>
+              </Col>
+
+              <Col xs={24} sm={12} md={8}>
+                <Card size="small" title="Timestamps">
+                  <Space direction="vertical" style={{ width: "100%" }}>
                     <div>
                       <CalendarOutlined style={{ marginRight: 8 }} />
                       <Text strong>Created: </Text>
@@ -145,7 +149,7 @@ export const UserShow = () => {
                   </Space>
                 </Card>
               </Col>
-              
+
               <Col xs={24} sm={24} md={8}>
                 <Card size="small" title="Project Statistics">
                   <Space direction="vertical" style={{ width: "100%" }}>
@@ -154,15 +158,17 @@ export const UserShow = () => {
                       <Tag color="blue">{userProjects.length}</Tag>
                     </div>
                     <div>
-                      <Text strong>Active Projects: </Text>
-                      <Tag color="green">
-                        {userProjects.filter(p => p.status === "active").length}
-                      </Tag>
+                      <Text strong>Projects Created: </Text>
+                      <Tag color="green">{userProjects.length}</Tag>
                     </div>
                     <div>
-                      <Text strong>In Development: </Text>
-                      <Tag color="orange">
-                        {userProjects.filter(p => p.status === "in_development").length}
+                      <Text strong>Recent Projects: </Text>
+                      <Tag color="purple">
+                        {userProjects.filter(p => {
+                          const created = new Date(p.created_at);
+                          const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+                          return created > thirtyDaysAgo;
+                        }).length}
                       </Tag>
                     </div>
                   </Space>
@@ -171,7 +177,7 @@ export const UserShow = () => {
             </Row>
           </Card>
 
-          <Card title="Associated Projects" loading={projectsLoading}>
+          <Card title="Created Projects" loading={projectsLoading}>
             {userProjects.length > 0 ? (
               <Table
                 dataSource={userProjects}
@@ -184,7 +190,7 @@ export const UserShow = () => {
               <div style={{ textAlign: "center", padding: "40px 0" }}>
                 <ProjectOutlined style={{ fontSize: "48px", color: "#d9d9d9" }} />
                 <Title level={4} style={{ color: "#999", marginTop: "16px" }}>
-                  No projects assigned to this user
+                  No projects created by this user
                 </Title>
               </div>
             )}
@@ -196,9 +202,73 @@ export const UserShow = () => {
 };
 
 export const UserEdit = () => {
+  const { formProps, saveButtonProps, formLoading } = useForm({});
+
   return (
-    <div>
-      <p>User Edit - Coming Soon</p>
-    </div>
+    <Edit saveButtonProps={saveButtonProps} isLoading={formLoading}>
+      <Form {...formProps} layout="vertical">
+        <Form.Item
+          label={"Username"}
+          name="username"
+          rules={[
+            {
+              required: true,
+              min: 3,
+              message: "Username must be at least 3 characters",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label={"Email"}
+          name="email"
+          rules={[
+            {
+              required: true,
+              type: "email",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label={"Full Name"}
+          name="full_name"
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label={"Notes"}
+          name="notes"
+        >
+          <Input.TextArea rows={3} placeholder="Enter notes about this user" />
+        </Form.Item>
+        <Form.Item
+          label={"Roles"}
+          name="roles"
+          rules={[
+            {
+              required: true,
+              message: "Please select at least one role",
+            },
+          ]}
+        >
+          <Select
+            mode="multiple"
+            placeholder="Select user roles"
+            options={[
+              { value: "admin", label: "Admin" },
+              { value: "user", label: "User" },
+              { value: "tester", label: "Tester" },
+              { value: "developer", label: "Developer" },
+              { value: "analyst", label: "Analyst" },
+              { value: "project_manager", label: "Project Manager" },
+              { value: "team_lead", label: "Team Lead" },
+            ]}
+          />
+        </Form.Item>
+      </Form>
+    </Edit>
   );
 };

@@ -1,166 +1,114 @@
 {
   "users": [
     {
-      "id": 1,
-      "username": "john_doe",
-      "email": "john.doe@example.com",
-      "full_name": "John Doe",
-      "is_active": true,
-      "created_at": "2024-01-15T08:30:00Z",
-      "updated_at": "2024-01-15T08:30:00Z"
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "username": "john_tester",
+      "email": "john@example.com",
+      "full_name": "John Smith",
+      "notes": "Senior QA Engineer with 5+ years experience",
+      "roles": ["tester", "team_lead"],
+      "created_at": "2025-01-15T08:30:00Z",
+      "updated_at": "2025-01-15T08:30:00Z"
     },
     {
-      "id": 2,
-      "username": "jane_smith",
-      "email": "jane.smith@example.com",
-      "full_name": "Jane Smith",
-      "is_active": true,
-      "created_at": "2024-01-16T09:15:00Z",
-      "updated_at": "2024-01-16T09:15:00Z"
+      "id": "550e8400-e29b-41d4-a716-446655440002",
+      "username": "sarah_qa",
+      "email": "sarah@example.com",
+      "full_name": "Sarah Johnson",
+      "notes": "API Testing Specialist",
+      "roles": ["tester", "developer"],
+      "created_at": "2025-01-16T09:15:00Z",
+      "updated_at": "2025-01-16T09:15:00Z"
     },
     {
-      "id": 3,
-      "username": "bob_wilson",
-      "email": "bob.wilson@example.com",
-      "full_name": "Bob Wilson",
-      "is_active": true,
-      "created_at": "2024-01-17T10:00:00Z",
-      "updated_at": "2024-01-17T10:00:00Z"
+      "id": "550e8400-e29b-41d4-a716-446655440003",
+      "username": "mike_admin",
+      "email": "mike@example.com",
+      "full_name": "Mike Wilson",
+      "notes": "Platform Administrator",
+      "roles": ["admin", "project_manager"],
+      "created_at": "2025-01-17T10:00:00Z",
+      "updated_at": "2025-01-17T10:00:00Z"
     },
     {
-      "id": 4,
-      "username": "alice_johnson",
-      "email": "alice.johnson@example.com",
-      "full_name": "Alice Johnson",
-      "is_active": false,
-      "created_at": "2024-01-18T11:45:00Z",
-      "updated_at": "2024-01-20T14:30:00Z"
+      "id": "550e8400-e29b-41d4-a716-446655440004",
+      "username": "emma_dev",
+      "email": "emma@example.com",
+      "full_name": "Emma Davis",
+      "notes": "Developer/Tester",
+      "roles": ["developer", "tester"],
+      "created_at": "2025-01-18T11:45:00Z",
+      "updated_at": "2025-01-20T14:30:00Z"
     },
     {
-      "id": 5,
-      "username": "charlie_brown",
-      "email": "charlie.brown@example.com",
-      "full_name": "Charlie Brown",
-      "is_active": true,
-      "created_at": "2024-01-19T13:20:00Z",
-      "updated_at": "2024-01-19T13:20:00Z"
+      "id": "550e8400-e29b-41d4-a716-446655440005",
+      "username": "alex_analyst",
+      "email": "alex@example.com",
+      "full_name": "Alex Brown",
+      "notes": "Business Analyst",
+      "roles": ["analyst", "user"],
+      "created_at": "2025-01-19T13:20:00Z",
+      "updated_at": "2025-01-19T13:20:00Z"
     },
     {
-      "id": 6,
-      "username": "diana_prince",
-      "email": "diana.prince@example.com",
+      "id": "550e8400-e29b-41d4-a716-446655440006",
+      "username": "diana_tester",
+      "email": "diana@example.com",
       "full_name": "Diana Prince",
-      "is_active": true,
-      "created_at": "2024-01-20T15:10:00Z",
-      "updated_at": "2024-01-20T15:10:00Z"
+      "notes": "Manual Testing Specialist",
+      "roles": ["tester"],
+      "created_at": "2025-01-20T15:10:00Z",
+      "updated_at": "2025-01-20T15:10:00Z"
     },
     {
-      "id": 7,
+      "id": "550e8400-e29b-41d4-a716-446655440007",
       "username": "test_user",
       "email": "test@example.com",
       "full_name": "Test User",
-      "is_active": true,
-      "created_at": "2024-01-21T16:00:00Z",
-      "updated_at": "2024-01-21T16:00:00Z"
+      "notes": "General testing account",
+      "roles": ["user"],
+      "created_at": "2025-01-21T16:00:00Z",
+      "updated_at": "2025-01-21T16:00:00Z"
     },
     {
-      "id": 8,
+      "id": "550e8400-e29b-41d4-a716-446655440008",
       "username": "admin_user",
       "email": "admin@example.com",
       "full_name": "Admin User",
-      "is_active": true,
-      "created_at": "2024-01-22T08:00:00Z",
-      "updated_at": "2024-01-22T08:00:00Z"
+      "notes": "System Administrator",
+      "roles": ["admin"],
+      "created_at": "2025-01-22T08:00:00Z",
+      "updated_at": "2025-01-22T08:00:00Z"
     },
     {
-      "id": 9,
-      "username": "inactive_user",
-      "email": "inactive@example.com",
-      "full_name": "Inactive User",
-      "is_active": false,
-      "created_at": "2024-01-23T12:00:00Z",
-      "updated_at": "2024-01-25T10:00:00Z"
+      "id": "550e8400-e29b-41d4-a716-446655440009",
+      "username": "lisa_pm",
+      "email": "lisa@example.com",
+      "full_name": "Lisa Garcia",
+      "notes": "Project Manager for testing initiatives",
+      "roles": ["project_manager", "user"],
+      "created_at": "2025-01-23T12:00:00Z",
+      "updated_at": "2025-01-25T10:00:00Z"
     },
     {
-      "id": 10,
+      "id": "550e8400-e29b-41d4-a716-446655440010",
       "username": "new_user",
       "email": "new.user@example.com",
       "full_name": "New User",
-      "is_active": true,
-      "created_at": "2024-01-24T14:30:00Z",
-      "updated_at": "2024-01-24T14:30:00Z"
-    }
-  ],
-  "user_credentials": [
-    {
-      "user_id": 1,
-      "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/lewohyb39kuhf.H6e",
-      "created_at": "2024-01-15T08:30:00Z",
-      "updated_at": "2024-01-15T08:30:00Z"
-    },
-    {
-      "user_id": 2,
-      "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/lewohyb39kuhf.H6e",
-      "created_at": "2024-01-16T09:15:00Z",
-      "updated_at": "2024-01-16T09:15:00Z"
-    },
-    {
-      "user_id": 3,
-      "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/lewohyb39kuhf.H6e",
-      "created_at": "2024-01-17T10:00:00Z",
-      "updated_at": "2024-01-17T10:00:00Z"
-    },
-    {
-      "user_id": 4,
-      "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/lewohyb39kuhf.H6e",
-      "created_at": "2024-01-18T11:45:00Z",
-      "updated_at": "2024-01-18T11:45:00Z"
-    },
-    {
-      "user_id": 5,
-      "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/lewohyb39kuhf.H6e",
-      "created_at": "2024-01-19T13:20:00Z",
-      "updated_at": "2024-01-19T13:20:00Z"
-    },
-    {
-      "user_id": 6,
-      "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/lewohyb39kuhf.H6e",
-      "created_at": "2024-01-20T15:10:00Z",
-      "updated_at": "2024-01-20T15:10:00Z"
-    },
-    {
-      "user_id": 7,
-      "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/lewohyb39kuhf.H6e",
-      "created_at": "2024-01-21T16:00:00Z",
-      "updated_at": "2024-01-21T16:00:00Z"
-    },
-    {
-      "user_id": 8,
-      "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/lewohyb39kuhf.H6e",
-      "created_at": "2024-01-22T08:00:00Z",
-      "updated_at": "2024-01-22T08:00:00Z"
-    },
-    {
-      "user_id": 9,
-      "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/lewohyb39kuhf.H6e",
-      "created_at": "2024-01-23T12:00:00Z",
-      "updated_at": "2024-01-23T12:00:00Z"
-    },
-    {
-      "user_id": 10,
-      "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/lewohyb39kuhf.H6e",
-      "created_at": "2024-01-24T14:30:00Z",
-      "updated_at": "2024-01-24T14:30:00Z"
+      "notes": "Recently joined team member",
+      "roles": ["user"],
+      "created_at": "2025-01-24T14:30:00Z",
+      "updated_at": "2025-01-24T14:30:00Z"
     }
   ],
   "api_test_data": {
     "valid_login": {
-      "username": "john_doe",
+      "username": "john_tester",
       "password": "testpassword123"
     },
     "admin_login": {
-      "username": "admin_user",
-      "password": "testpassword123"
+      "username": "mike_admin",
+      "password": "adminpassword123"
     },
     "new_user_registration": {
       "username": "test_register",
@@ -170,22 +118,22 @@
     },
     "update_user_data": {
       "full_name": "Updated Full Name",
-      "email": "updated.email@example.com"
+      "notes": "Updated user notes",
+      "roles": ["user", "tester"]
     },
     "search_queries": [
       "john",
-      "smith",
+      "sarah",
       "@example.com",
-      "test"
+      "tester"
     ]
   },
   "metadata": {
     "total_users": 10,
-    "active_users": 8,
-    "inactive_users": 2,
-    "password_note": "All passwords are hashed version of 'testpassword123'",
-    "created_date": "2024-08-04",
-    "purpose": "Fake data for testing user CRUD operations"
+    "password_note": "All passwords are for testing purposes only",
+    "created_date": "2025-08-05",
+    "purpose": "Sample data for GenAI Software Testing Platform user management",
+    "roles_available": ["admin", "user", "tester", "developer", "analyst", "project_manager", "team_lead"]
   }
 }
 

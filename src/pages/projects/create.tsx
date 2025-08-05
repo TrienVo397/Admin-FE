@@ -1,69 +1,132 @@
-import { Create, useForm, useSelect } from "@refinedev/antd";
-import MDEditor from "@uiw/react-md-editor";
-import { Form, Input, Select } from "antd";
+import { Create, useForm } from "@refinedev/antd";
+import { Form, Input, DatePicker } from "antd";
 import React from "react";
+import { Dayjs } from "dayjs";
+
+const { TextArea } = Input;
 
 export const ProjectCreate = () => {
-  const { formProps, saveButtonProps } = useForm({});
-
-  const { selectProps: categorySelectProps } = useSelect({
-    resource: "categories",
+  const { formProps, saveButtonProps } = useForm({
+    onMutationSuccess: () => {
+      // Handle successful creation
+    },
   });
 
+  const handleFinish = (values: Record<string, unknown>) => {
+    // Transform dates to ISO strings and validate metadata
+    const transformedValues = {
+      ...values,
+      start_date: values.start_date ? (values.start_date as Dayjs).toISOString() : null,
+      end_date: values.end_date ? (values.end_date as Dayjs).toISOString() : null,
+      meta_data: values.meta_data ? (() => {
+        try {
+          // Validate JSON format if provided
+          if (values.meta_data) {
+            JSON.parse(values.meta_data as string);
+          }
+          return values.meta_data;
+        } catch {
+          throw new Error('Invalid JSON format in metadata');
+        }
+      })() : null,
+    };
+    
+    // Call the original onFinish with transformed values
+    formProps.onFinish?.(transformedValues);
+  };
+
   return (
-    <Create  saveButtonProps={saveButtonProps}>
-      <Form {...formProps} layout="vertical">
+    <Create saveButtonProps={saveButtonProps}>
+      <Form {...formProps} layout="vertical" onFinish={handleFinish}>
         <Form.Item
-          label={"Title"}
-          name={["random"]}
+          label={"Project Name"}
+          name="name"
           rules={[
             {
               required: true,
+              min: 2,
+              max: 100,
+              message: "Project name must be between 2-100 characters",
             },
           ]}
         >
-          <Input />
+          <Input placeholder="Enter a descriptive project name" />
         </Form.Item>
+        
         <Form.Item
-          label={"Content"}
-          name="content"
+          label={"Note"}
+          name="note"
           rules={[
             {
-              required: true,
+              max: 1000,
+              message: "Note cannot exceed 1000 characters",
             },
           ]}
         >
-          <MDEditor data-color-mode="light" />
+          <TextArea 
+            rows={4} 
+            placeholder="Enter project notes or description"
+            showCount
+            maxLength={1000}
+          />
         </Form.Item>
+        
         <Form.Item
-          label={"Category"}
-          name={["category", "id"]}
+          label={"Repository Path"}
+          name="repo_path"
           rules={[
             {
-              required: true,
+              max: 500,
+              message: "Repository path cannot exceed 500 characters",
             },
           ]}
         >
-          <Select {...categorySelectProps} />
+          <Input 
+            placeholder="e.g., /projects/my-project or https://github.com/user/repo"
+          />
         </Form.Item>
+        
         <Form.Item
-          label={"Status"}
-          name={["status"]}
-          initialValue={"draft"}
+          label={"Metadata (JSON)"}
+          name="meta_data"
+          help="Enter metadata as valid JSON format (optional)"
           rules={[
             {
-              required: true,
+              validator: (_, value) => {
+                if (!value) return Promise.resolve();
+                try {
+                  JSON.parse(value);
+                  return Promise.resolve();
+                } catch {
+                  return Promise.reject(new Error('Please enter valid JSON format'));
+                }
+              },
             },
           ]}
         >
-          <Select
-            defaultValue={"draft"}
-            options={[
-              { value: "draft", label: "Draft" },
-              { value: "published", label: "Published" },
-              { value: "rejected", label: "Rejected" },
-            ]}
-            style={{ width: 120 }}
+          <TextArea 
+            rows={3} 
+            placeholder='{"key": "value", "type": "web", "framework": "react"}'
+          />
+        </Form.Item>
+        
+        <Form.Item
+          label={"Start Date"}
+          name="start_date"
+        >
+          <DatePicker 
+            style={{ width: "100%" }}
+            placeholder="Select project start date"
+          />
+        </Form.Item>
+        
+        <Form.Item
+          label={"End Date"}
+          name="end_date"
+        >
+          <DatePicker 
+            style={{ width: "100%" }}
+            placeholder="Select project end date"
           />
         </Form.Item>
       </Form>

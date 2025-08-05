@@ -1,5 +1,5 @@
 import { Create, useForm } from "@refinedev/antd";
-import { Form, Input, Select } from "antd";
+import { Form, Input, DatePicker } from "antd";
 import React from "react";
 
 const { TextArea } = Input;
@@ -22,45 +22,37 @@ export const ProjectCreate = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          label={"Description"}
-          name="description"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          label={"Note"}
+          name="note"
         >
-          <TextArea rows={4} />
+          <TextArea rows={4} placeholder="Enter project notes or description" />
         </Form.Item>
         <Form.Item
-          label={"Status"}
-          name="status"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          label={"Repository Path"}
+          name="repo_path"
         >
-          <Select
-            placeholder="Select status"
-            options={[
-              { value: "active", label: "Active" },
-              { value: "in_development", label: "In Development" },
-              { value: "testing", label: "Testing" },
-              { value: "completed", label: "Completed" },
-            ]}
+          <Input placeholder="e.g., /projects/my-project" />
+        </Form.Item>
+        <Form.Item
+          label={"Metadata"}
+          name="meta_data"
+        >
+          <TextArea
+            rows={3}
+            placeholder="Enter metadata as JSON string (optional)"
           />
         </Form.Item>
         <Form.Item
-          label={"Owner ID"}
-          name="owner_id"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          label={"Start Date"}
+          name="start_date"
         >
-          <Input type="number" />
+          <DatePicker style={{ width: "100%" }} />
+        </Form.Item>
+        <Form.Item
+          label={"End Date"}
+          name="end_date"
+        >
+          <DatePicker style={{ width: "100%" }} />
         </Form.Item>
       </Form>
     </Create>

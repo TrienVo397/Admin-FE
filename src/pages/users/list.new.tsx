@@ -8,13 +8,13 @@ import {
   useTable,
 } from "@refinedev/antd";
 import { type BaseRecord } from "@refinedev/core";
-import { Space, Table, Input, Select } from "antd";
+import { Space, Table, Input, Select, Tag } from "antd";
 import React from "react";
 
 export const UserList = () => {
   const { tableProps } = useTable({
     syncWithLocation: true,
-    onSearch: (params: any) => {
+    onSearch: (params: Record<string, unknown>) => {
       return [
         {
           field: "username",
@@ -32,9 +32,9 @@ export const UserList = () => {
           value: params.email,
         },
         {
-          field: "is_active",
-          operator: "eq",
-          value: params.is_active,
+          field: "roles",
+          operator: "contains",
+          value: params.roles,
         }
       ];
     },
@@ -75,25 +75,48 @@ export const UserList = () => {
           )}
         />
         <Table.Column
-          dataIndex="is_active"
-          title={"Status"}
-          render={(value) => (
-            <span style={{ 
-              color: value ? '#52c41a' : '#ff4d4f',
-              fontWeight: 'bold'
+          dataIndex="notes"
+          title={"Notes"}
+          render={(text: string) => (
+            <span style={{
+              color: text ? '#333' : '#999',
+              fontStyle: text ? 'normal' : 'italic'
             }}>
-              {value ? 'Active' : 'Inactive'}
+              {text || 'No notes'}
             </span>
+          )}
+          filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+              <Input placeholder="Search notes" />
+            </FilterDropdown>
+          )}
+        />
+        <Table.Column
+          dataIndex="roles"
+          title={"Roles"}
+          render={(roles: string[]) => (
+            <div>
+              {roles?.map((role: string) => (
+                <Tag key={role} color="blue" style={{ marginBottom: 2 }}>
+                  {role.charAt(0).toUpperCase() + role.slice(1).replace('_', ' ')}
+                </Tag>
+              )) || <span style={{ color: '#999', fontStyle: 'italic' }}>No roles</span>}
+            </div>
           )}
           filterDropdown={(props) => (
             <FilterDropdown {...props}>
               <Select
                 style={{ width: 200 }}
-                placeholder="Select status"
+                placeholder="Select role"
                 allowClear
                 options={[
-                  { value: true, label: "Active" },
-                  { value: false, label: "Inactive" },
+                  { value: "admin", label: "Admin" },
+                  { value: "user", label: "User" },
+                  { value: "tester", label: "Tester" },
+                  { value: "developer", label: "Developer" },
+                  { value: "analyst", label: "Analyst" },
+                  { value: "project_manager", label: "Project Manager" },
+                  { value: "team_lead", label: "Team Lead" },
                 ]}
               />
             </FilterDropdown>
@@ -102,7 +125,7 @@ export const UserList = () => {
         <Table.Column
           dataIndex={["created_at"]}
           title={"Created at"}
-          render={(value: any) => <DateField value={value} />}
+          render={(value: string) => <DateField value={value} />}
         />
         <Table.Column
           title={"Actions"}

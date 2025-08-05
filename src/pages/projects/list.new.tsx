@@ -8,13 +8,13 @@ import {
   useTable,
 } from "@refinedev/antd";
 import { type BaseRecord } from "@refinedev/core";
-import { Space, Table, Input, Select } from "antd";
+import { Space, Table, Input, Tag } from "antd";
 import React from "react";
 
 export const ProjectList = () => {
   const { tableProps } = useTable({
     syncWithLocation: true,
-    onSearch: (params: any) => {
+    onSearch: (params: Record<string, unknown>) => {
       return [
         {
           field: "name",
@@ -22,14 +22,14 @@ export const ProjectList = () => {
           value: params.name,
         },
         {
-          field: "description",
-          operator: "contains", 
-          value: params.description,
+          field: "note",
+          operator: "contains",
+          value: params.note,
         },
         {
-          field: "status",
-          operator: "eq",
-          value: params.status,
+          field: "repo_path",
+          operator: "contains",
+          value: params.repo_path,
         }
       ];
     },
@@ -52,63 +52,56 @@ export const ProjectList = () => {
           )}
         />
         <Table.Column
-          dataIndex="description"
-          title={"Description"}
+          dataIndex="note"
+          title={"Note"}
           render={(value: string) => (
             <span title={value}>
-              {value?.length > 50 ? `${value.substring(0, 50)}...` : value}
+              {value?.length > 50 ? `${value.substring(0, 50)}...` : value || "No note"}
             </span>
           )}
           filterDropdown={(props) => (
             <FilterDropdown {...props}>
-              <Input placeholder="Search description" />
+              <Input placeholder="Search note" />
             </FilterDropdown>
           )}
         />
         <Table.Column
-          dataIndex="status"
-          title={"Status"}
-          render={(value) => (
-            <span style={{
-              padding: '4px 8px',
-              borderRadius: '4px',
-              fontSize: '12px',
-              fontWeight: 'bold',
-              backgroundColor: 
-                value === 'active' ? '#f6ffed' :
-                value === 'in_development' ? '#fff7e6' : '#fff1f0',
-              color:
-                value === 'active' ? '#52c41a' :
-                value === 'in_development' ? '#fa8c16' : '#ff4d4f'
-            }}>
-              {value === 'in_development' ? 'In Development' : 
-               value.charAt(0).toUpperCase() + value.slice(1)}
-            </span>
+          dataIndex="repo_path"
+          title={"Repository Path"}
+          render={(value: string) => (
+            <Tag color="blue" style={{ fontSize: "11px" }}>
+              {value || "Not specified"}
+            </Tag>
           )}
           filterDropdown={(props) => (
             <FilterDropdown {...props}>
-              <Select
-                style={{ width: 200 }}
-                placeholder="Select status"
-                allowClear
-                options={[
-                  { value: "active", label: "Active" },
-                  { value: "in_development", label: "In Development" },
-                  { value: "testing", label: "Testing" },
-                  { value: "completed", label: "Completed" },
-                ]}
-              />
+              <Input placeholder="Search repository path" />
             </FilterDropdown>
           )}
         />
         <Table.Column
-          dataIndex="owner_id"
-          title={"Owner ID"}
+          dataIndex="start_date"
+          title={"Start Date"}
+          render={(value: string) => value ? new Date(value).toLocaleDateString() : "Not set"}
+        />
+        <Table.Column
+          dataIndex="end_date"
+          title={"End Date"}
+          render={(value: string) => value ? new Date(value).toLocaleDateString() : "Not set"}
+        />
+        <Table.Column
+          dataIndex="created_by"
+          title={"Created By"}
+          render={(value: string) => (
+            <Tag color="green" style={{ fontSize: "11px" }}>
+              {value?.substring(0, 8) || "Unknown"}
+            </Tag>
+          )}
         />
         <Table.Column
           dataIndex={["created_at"]}
           title={"Created at"}
-          render={(value: any) => <DateField value={value} />}
+          render={(value: string) => <DateField value={value} />}
         />
         <Table.Column
           title={"Actions"}

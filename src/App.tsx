@@ -35,6 +35,8 @@ import {
 import {
  ProjectList,
  ProjectCreate,
+ ProjectShow,
+ ProjectEdit,
 } from "./pages/projects/index.new";
 
 import { AppIcon } from "./components/app-icon";
@@ -110,8 +112,8 @@ function App() {
                     <Route path="/projects">
                       <Route index element={<ProjectList />} />
                       <Route path="create" element={<ProjectCreate />} />
-                      <Route path="edit/:id" element={<div>Project Edit - Coming Soon</div>} />
-                      <Route path="show/:id" element={<div>Project Show - Coming Soon</div>} />
+                      <Route path="edit/:id" element={<ProjectEdit />} />
+                      <Route path="show/:id" element={<ProjectShow />} />
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
