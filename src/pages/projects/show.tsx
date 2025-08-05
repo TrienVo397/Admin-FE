@@ -1,12 +1,10 @@
-import { Show, Edit, useForm } from "@refinedev/antd";
+import { Show } from "@refinedev/antd";
 import { useShow, useOne } from "@refinedev/core";
-import { Typography, Card, Row, Col, Tag, Space, Form, Input, DatePicker } from "antd";
+import { Typography, Card, Row, Col, Tag, Space } from "antd";
 import { ProjectOutlined, FolderOutlined, CalendarOutlined, UserOutlined, FileTextOutlined } from "@ant-design/icons";
 import React from "react";
-import { Dayjs } from "dayjs";
 
 const { Title, Text } = Typography;
-const { TextArea } = Input;
 
 export const ProjectShow = () => {
   const { queryResult } = useShow({});
@@ -187,145 +185,5 @@ export const ProjectShow = () => {
         </div>
       )}
     </Show>
-  );
-};
-
-export const ProjectEdit = () => {
-  const { formProps, saveButtonProps, formLoading } = useForm({
-    onMutationSuccess: () => {
-      // Handle successful update
-    },
-  });
-
-  const handleFinish = (values: Record<string, unknown>) => {
-    // Transform dates to ISO strings
-    const transformedValues = {
-      ...values,
-      start_date: values.start_date ? (values.start_date as Dayjs).toISOString() : null,
-      end_date: values.end_date ? (values.end_date as Dayjs).toISOString() : null,
-      meta_data: values.meta_data ? (() => {
-        try {
-          // Validate JSON format
-          JSON.parse(values.meta_data as string);
-          return values.meta_data;
-        } catch {
-          // If not valid JSON, wrap in quotes to make it a string
-          return JSON.stringify(values.meta_data);
-        }
-      })() : null,
-    };
-    formProps.onFinish?.(transformedValues);
-  };
-
-  return (
-    <Edit saveButtonProps={saveButtonProps} isLoading={formLoading}>
-      <Form {...formProps} layout="vertical" onFinish={handleFinish}>
-        <Form.Item
-          label={"Project Name"}
-          name="name"
-          rules={[
-            {
-              required: true,
-              min: 2,
-              message: "Project name must be at least 2 characters",
-            },
-            {
-              max: 100,
-              message: "Project name must not exceed 100 characters",
-            },
-          ]}
-        >
-          <Input placeholder="Enter a unique project name" />
-        </Form.Item>
-        
-        <Form.Item
-          label={"Note"}
-          name="note"
-          extra="Optional description or notes about the project"
-        >
-          <TextArea 
-            rows={4} 
-            placeholder="Enter project notes or description"
-            showCount
-            maxLength={500}
-          />
-        </Form.Item>
-        
-        <Form.Item
-          label={"Repository Path"}
-          name="repo_path"
-          extra="File system path where the project is located"
-        >
-          <Input placeholder="e.g., /projects/my-project" />
-        </Form.Item>
-        
-        <Form.Item
-          label={"Metadata"}
-          name="meta_data"
-          extra="Additional project metadata in JSON format (optional)"
-          rules={[
-            {
-              validator: (_, value) => {
-                if (!value) return Promise.resolve();
-                try {
-                  JSON.parse(value);
-                  return Promise.resolve();
-                } catch {
-                  return Promise.reject(new Error("Must be valid JSON format"));
-                }
-              }
-            }
-          ]}
-        >
-          <TextArea
-            rows={3}
-            placeholder='{"tech_stack": ["React", "Node.js"], "project_type": "web_application"}'
-          />
-        </Form.Item>
-        
-        <Row gutter={16}>
-          <Col xs={24} sm={12}>
-            <Form.Item
-              label={"Start Date"}
-              name="start_date"
-              extra="When the project is planned to start"
-            >
-              <DatePicker 
-                style={{ width: "100%" }} 
-                placeholder="Select start date"
-                format="YYYY-MM-DD"
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12}>
-            <Form.Item
-              label={"End Date"}
-              name="end_date"
-              extra="When the project is planned to end"
-              dependencies={['start_date']}
-              rules={[
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || !getFieldValue('start_date')) {
-                      return Promise.resolve();
-                    }
-                    if (value.isAfter(getFieldValue('start_date'))) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error('End date must be after start date'));
-                  },
-                }),
-              ]}
-            >
-              <DatePicker 
-                style={{ width: "100%" }} 
-                placeholder="Select end date"
-                format="YYYY-MM-DD"
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form>
-    </Edit>
   );
 };

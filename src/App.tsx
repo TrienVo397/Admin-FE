@@ -31,13 +31,13 @@ import {
   UserCreate,
   UserEdit,
   UserShow,
-} from "./pages/users/index.new";
+} from "./pages/users";
 import {
  ProjectList,
  ProjectCreate,
  ProjectShow,
  ProjectEdit,
-} from "./pages/projects/index.new";
+} from "./pages/projects";
 
 import { AppIcon } from "./components/app-icon";
 import { ColorModeContextProvider } from "./contexts/color-mode";
