@@ -44,21 +44,21 @@ export const ProjectShow = () => {
                   <ProjectOutlined style={{ marginRight: 8 }} />
                   {record.name}
                   {/* Project Status Indicator */}
-                  <Tag 
+                  <Tag
                     color={
-                      record.end_date && new Date(record.end_date) < new Date() 
-                        ? "red" 
+                      record.end_date && new Date(record.end_date) < new Date()
+                        ? "red"
                         : record.start_date && new Date(record.start_date) <= new Date()
-                        ? "green"
-                        : "blue"
+                          ? "green"
+                          : "blue"
                     }
                     style={{ marginLeft: 12 }}
                   >
-                    {record.end_date && new Date(record.end_date) < new Date() 
-                      ? "Ended" 
+                    {record.end_date && new Date(record.end_date) < new Date()
+                      ? "Ended"
                       : record.start_date && new Date(record.start_date) <= new Date()
-                      ? "Active"
-                      : "Planned"}
+                        ? "Active"
+                        : "Planned"}
                   </Tag>
                 </Title>
               </Col>
@@ -101,9 +101,9 @@ export const ProjectShow = () => {
                       {record.meta_data ? (
                         <div style={{ marginTop: 8 }}>
                           <Card size="small" style={{ backgroundColor: "#f5f5f5" }}>
-                            <pre style={{ 
-                              fontSize: "11px", 
-                              margin: 0, 
+                            <pre style={{
+                              fontSize: "11px",
+                              margin: 0,
                               whiteSpace: "pre-wrap",
                               wordBreak: "break-all"
                             }}>

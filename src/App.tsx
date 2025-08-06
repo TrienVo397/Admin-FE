@@ -1,9 +1,8 @@
 import {
   Refine,
-  WelcomePage,
   Authenticated,
 } from "@refinedev/core";
-import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
+import { DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import {
@@ -15,8 +14,10 @@ import {
 } from "@refinedev/antd";
 import "@refinedev/antd/dist/reset.css";
 
-import dataProvider from "@refinedev/simple-rest";
 import { localDataProvider } from "./providers/localDataProvider";
+import { apiDataProvider } from "./providers/apiDataProvider";
+import { authProvider } from "./providers/authProvider";
+import { config } from "./config";
 import { App as AntdApp } from "antd";
 import { BrowserRouter, Route, Routes, Outlet } from "react-router";
 import routerBindings, {
@@ -33,10 +34,10 @@ import {
   UserShow,
 } from "./pages/users";
 import {
- ProjectList,
- ProjectCreate,
- ProjectShow,
- ProjectEdit,
+  ProjectList,
+  ProjectCreate,
+  ProjectShow,
+  ProjectEdit,
 } from "./pages/projects";
 
 import { AppIcon } from "./components/app-icon";
@@ -51,7 +52,8 @@ function App() {
           <AntdApp>
             <DevtoolsProvider>
               <Refine
-                dataProvider={localDataProvider}
+                dataProvider={config.USE_MOCK_DATA ? localDataProvider : apiDataProvider}
+                authProvider={config.USE_MOCK_DATA ? undefined : authProvider}
                 notificationProvider={useNotificationProvider}
                 routerProvider={routerBindings}
                 resources={[
@@ -75,7 +77,7 @@ function App() {
                     show: "/projects/show/:id",
                     meta: {
                       canDelete: true,
-                       label: "Projects",
+                      label: "Projects",
                       icon: <ProjectOutlined />,
                     },
                   },
@@ -91,12 +93,26 @@ function App() {
                 <Routes>
                   <Route
                     element={
-                      <ThemedLayoutV2
-                        Header={() => <Header sticky />}
-                        Sider={(props) => <ThemedSiderV2 {...props} fixed />}
-                      >
-                        <Outlet />
-                      </ThemedLayoutV2>
+                      config.USE_MOCK_DATA ? (
+                        <ThemedLayoutV2
+                          Header={() => <Header sticky />}
+                          Sider={(props) => <ThemedSiderV2 {...props} fixed />}
+                        >
+                          <Outlet />
+                        </ThemedLayoutV2>
+                      ) : (
+                        <Authenticated
+                          key="authenticated-inner"
+                          fallback={<CatchAllNavigate to="/login" />}
+                        >
+                          <ThemedLayoutV2
+                            Header={() => <Header sticky />}
+                            Sider={(props) => <ThemedSiderV2 {...props} fixed />}
+                          >
+                            <Outlet />
+                          </ThemedLayoutV2>
+                        </Authenticated>
+                      )
                     }
                   >
                     <Route
@@ -117,6 +133,33 @@ function App() {
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
+
+                  {/* Authentication Routes - Only show when not using mock data */}
+                  {!config.USE_MOCK_DATA && (
+                    <Route
+                      element={
+                        <Authenticated key="authenticated-outer" fallback={<Outlet />}>
+                          <NavigateToResource />
+                        </Authenticated>
+                      }
+                    >
+                      <Route
+                        path="/login"
+                        element={
+                          <AuthPage
+                            type="login"
+                            title={<AppIcon />}
+                            formProps={{
+                              initialValues: {
+                                email: "",
+                                password: "",
+                              },
+                            }}
+                          />
+                        }
+                      />
+                    </Route>
+                  )}
                 </Routes>
 
                 <RefineKbar />
@@ -124,11 +167,11 @@ function App() {
                 <DocumentTitleHandler handler={({ resource }) => { // tab title
                   const resourceLabel = resource?.meta?.label || resource?.label || resource?.name;
                   let title = "SkyTest";
-                  
+
                   if (resourceLabel) {
                     title = `${resourceLabel} | ${title}`;
                   }
-                  
+
                   return title;
                 }} />
               </Refine>

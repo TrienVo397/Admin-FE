@@ -30,7 +30,7 @@ export const ProjectEdit = () => {
         }
       })() : null,
     };
-    
+
     // Call the original onFinish with transformed values
     formProps.onFinish?.(transformedValues);
   };
@@ -52,7 +52,7 @@ export const ProjectEdit = () => {
         >
           <Input placeholder="Enter a descriptive project name" />
         </Form.Item>
-        
+
         <Form.Item
           label={"Note"}
           name="note"
@@ -63,14 +63,14 @@ export const ProjectEdit = () => {
             },
           ]}
         >
-          <TextArea 
-            rows={4} 
+          <TextArea
+            rows={4}
             placeholder="Enter project notes or description"
             showCount
             maxLength={1000}
           />
         </Form.Item>
-        
+
         <Form.Item
           label={"Repository Path"}
           name="repo_path"
@@ -81,11 +81,11 @@ export const ProjectEdit = () => {
             },
           ]}
         >
-          <Input 
+          <Input
             placeholder="e.g., /projects/my-project or https://github.com/user/repo"
           />
         </Form.Item>
-        
+
         <Form.Item
           label={"Metadata (JSON)"}
           name="meta_data"
@@ -104,27 +104,27 @@ export const ProjectEdit = () => {
             },
           ]}
         >
-          <TextArea 
-            rows={3} 
+          <TextArea
+            rows={3}
             placeholder='{"key": "value", "type": "web", "framework": "react"}'
           />
         </Form.Item>
-        
+
         <Form.Item
           label={"Start Date"}
           name="start_date"
         >
-          <DatePicker 
+          <DatePicker
             style={{ width: "100%" }}
             placeholder="Select project start date"
           />
         </Form.Item>
-        
+
         <Form.Item
           label={"End Date"}
           name="end_date"
         >
-          <DatePicker 
+          <DatePicker
             style={{ width: "100%" }}
             placeholder="Select project end date"
           />

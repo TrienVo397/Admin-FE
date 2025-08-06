@@ -224,12 +224,41 @@ The frontend is designed to work with a FastAPI backend with these specification
 ## 📝 Next Steps
 
 When resuming development:
-1. **Backend Integration**: Replace mock data provider with real API calls
-2. **Authentication**: Implement proper JWT handling and login flow
-3. **Error Handling**: Enhance error handling based on backend responses
+1. **Backend Integration**: 
+   - Set `USE_MOCK_DATA: false` in `src/config.ts`
+   - Update `API_URL` to match your FastAPI backend
+   - See `BACKEND_SETUP.md` for detailed instructions
+2. **Authentication**: Already implemented - login page will appear when using API mode
+3. **Error Handling**: Enhanced error handling included in API data provider
 4. **Testing**: Add unit and integration tests
 5. **Performance**: Optimize data loading and caching
 6. **Features**: Add more advanced filtering, sorting, and export capabilities
+
+## 🔄 Backend Integration
+
+### Quick Backend Connection
+1. **Open** `src/config.ts`
+2. **Set** `USE_MOCK_DATA: false`
+3. **Update** `API_URL` to your FastAPI backend URL
+4. **Start your backend** and refresh the frontend
+5. **Login page will appear** - use your backend credentials
+
+### Data Provider Switching
+- **Mock Data Mode**: `USE_MOCK_DATA: true` (current default)
+  - Uses local JSON data for development
+  - No authentication required
+  - Perfect for UI development and testing
+
+- **API Mode**: `USE_MOCK_DATA: false`
+  - Connects to your FastAPI backend
+  - Full authentication with JWT tokens
+  - Real CRUD operations with your database
+
+### Files Added for Backend Integration
+- `src/providers/authProvider.ts` - JWT authentication handling
+- `src/providers/apiDataProvider.ts` - REST API communication
+- `src/config.ts` - Application configuration
+- `BACKEND_SETUP.md` - Detailed backend setup guide
 
 ## 🐛 Troubleshooting
 
