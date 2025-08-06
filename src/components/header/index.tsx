@@ -44,6 +44,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
 
   return (
     <AntdLayout.Header style={headerStyles}>
+      
       <Space>
         <Switch
           checkedChildren="🌛"

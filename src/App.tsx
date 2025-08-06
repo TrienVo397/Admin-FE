@@ -10,7 +10,6 @@ import {
   ErrorComponent,
   useNotificationProvider,
   ThemedLayoutV2,
-  ThemedSiderV2,
 } from "@refinedev/antd";
 import "@refinedev/antd/dist/reset.css";
 
@@ -42,7 +41,7 @@ import {
 
 import { AppIcon } from "./components/app-icon";
 import { ColorModeContextProvider } from "./contexts/color-mode";
-import { Header } from "./components/header";
+import { Header, HoverExpandSider } from "./components";
 
 function App() {
   return (
@@ -96,7 +95,7 @@ function App() {
                       config.USE_MOCK_DATA ? (
                         <ThemedLayoutV2
                           Header={() => <Header sticky />}
-                          Sider={(props) => <ThemedSiderV2 {...props} fixed />}
+                          Sider={(props) => <HoverExpandSider {...props} fixed />}
                         >
                           <Outlet />
                         </ThemedLayoutV2>
@@ -107,7 +106,7 @@ function App() {
                         >
                           <ThemedLayoutV2
                             Header={() => <Header sticky />}
-                            Sider={(props) => <ThemedSiderV2 {...props} fixed />}
+                            Sider={(props) => <HoverExpandSider {...props} fixed />}
                           >
                             <Outlet />
                           </ThemedLayoutV2>
