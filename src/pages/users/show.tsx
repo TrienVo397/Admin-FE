@@ -1,6 +1,6 @@
-import { Show, Edit, useForm } from "@refinedev/antd";
+import { Show } from "@refinedev/antd";
 import { useShow, useList } from "@refinedev/core";
-import { Typography, Card, Row, Col, Tag, Table, Space, Form, Input, Select } from "antd";
+import { Typography, Card, Row, Col, Tag, Table, Space } from "antd";
 import { UserOutlined, MailOutlined, CalendarOutlined, ProjectOutlined } from "@ant-design/icons";
 import React from "react";
 
@@ -198,77 +198,5 @@ export const UserShow = () => {
         </div>
       )}
     </Show>
-  );
-};
-
-export const UserEdit = () => {
-  const { formProps, saveButtonProps, formLoading } = useForm({});
-
-  return (
-    <Edit saveButtonProps={saveButtonProps} isLoading={formLoading}>
-      <Form {...formProps} layout="vertical">
-        <Form.Item
-          label={"Username"}
-          name="username"
-          rules={[
-            {
-              required: true,
-              min: 3,
-              message: "Username must be at least 3 characters",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label={"Email"}
-          name="email"
-          rules={[
-            {
-              required: true,
-              type: "email",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label={"Full Name"}
-          name="full_name"
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label={"Notes"}
-          name="notes"
-        >
-          <Input.TextArea rows={3} placeholder="Enter notes about this user" />
-        </Form.Item>
-        <Form.Item
-          label={"Roles"}
-          name="roles"
-          rules={[
-            {
-              required: true,
-              message: "Please select at least one role",
-            },
-          ]}
-        >
-          <Select
-            mode="multiple"
-            placeholder="Select user roles"
-            options={[
-              { value: "admin", label: "Admin" },
-              { value: "user", label: "User" },
-              { value: "tester", label: "Tester" },
-              { value: "developer", label: "Developer" },
-              { value: "analyst", label: "Analyst" },
-              { value: "project_manager", label: "Project Manager" },
-              { value: "team_lead", label: "Team Lead" },
-            ]}
-          />
-        </Form.Item>
-      </Form>
-    </Edit>
   );
 };

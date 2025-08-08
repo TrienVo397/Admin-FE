@@ -1,21 +1,23 @@
 import { AuthBindings } from "@refinedev/core";
 import { notification } from "antd";
+import { config } from "../config";
 
-export const TOKEN_KEY = "refine-auth";
+export const TOKEN_KEY = config.TOKEN_STORAGE_KEY;
 
-// Backend API base URL - update this to match your FastAPI backend
-const API_URL = "http://localhost:8000/api/v1";
+// Use the configured API URL
+const API_URL = config.API_URL;
 
 export const authProvider: AuthBindings = {
-    login: async ({ email, password }) => {
+    login: async ({ username, password }) => {
         try {
-            const response = await fetch(`${API_URL}/auth/login`, {
+            // Use the correct FastAPI login endpoint
+            const response = await fetch(`${API_URL}/users/token`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    username: email, // FastAPI typically uses username field
+                    username: username, // FastAPI uses username field for login
                     password,
                 }),
             });
@@ -26,14 +28,25 @@ export const authProvider: AuthBindings = {
                 // Store the access token
                 localStorage.setItem(TOKEN_KEY, data.access_token);
 
-                // Optionally store user info
-                if (data.user) {
-                    localStorage.setItem("user", JSON.stringify(data.user));
+                // Get user profile after successful login
+                try {
+                    const userResponse = await fetch(`${API_URL}/users/whoami`, {
+                        headers: {
+                            "Authorization": `Bearer ${data.access_token}`,
+                        },
+                    });
+
+                    if (userResponse.ok) {
+                        const userData = await userResponse.json();
+                        localStorage.setItem(config.USER_STORAGE_KEY, JSON.stringify(userData));
+                    }
+                } catch (error) {
+                    console.warn("Could not fetch user profile:", error);
                 }
 
                 notification.success({
                     message: "Login Successful",
-                    description: "Welcome to SkyTest Admin Panel!",
+                    description: "Welcome to GenAI Testing Platform!",
                 });
 
                 return {
@@ -62,25 +75,10 @@ export const authProvider: AuthBindings = {
     },
 
     logout: async () => {
-        // Optional: Call logout endpoint on backend
-        try {
-            const token = localStorage.getItem(TOKEN_KEY);
-            if (token) {
-                await fetch(`${API_URL}/auth/logout`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                });
-            }
-        } catch (error) {
-            console.log("Logout error:", error);
-        }
-
-        // Clear local storage
+        // FastAPI doesn't have a logout endpoint (JWT is stateless)
+        // Just clear local storage
         localStorage.removeItem(TOKEN_KEY);
-        localStorage.removeItem("user");
+        localStorage.removeItem(config.USER_STORAGE_KEY);
 
         notification.success({
             message: "Logged Out",
@@ -97,22 +95,26 @@ export const authProvider: AuthBindings = {
         const token = localStorage.getItem(TOKEN_KEY);
 
         if (token) {
-            // Optional: Verify token with backend
+            // Verify token with FastAPI whoami endpoint
             try {
-                const response = await fetch(`${API_URL}/auth/me`, {
+                const response = await fetch(`${API_URL}/users/whoami`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                     },
                 });
 
                 if (response.ok) {
+                    const userData = await response.json();
+                    // Update stored user data
+                    localStorage.setItem(config.USER_STORAGE_KEY, JSON.stringify(userData));
+                    
                     return {
                         authenticated: true,
                     };
                 } else {
                     // Token is invalid, remove it
                     localStorage.removeItem(TOKEN_KEY);
-                    localStorage.removeItem("user");
+                    localStorage.removeItem(config.USER_STORAGE_KEY);
                     return {
                         authenticated: false,
                         redirectTo: "/login",
@@ -133,7 +135,7 @@ export const authProvider: AuthBindings = {
     },
 
     getPermissions: async () => {
-        const user = localStorage.getItem("user");
+        const user = localStorage.getItem(config.USER_STORAGE_KEY);
         if (user) {
             const userData = JSON.parse(user);
             return userData.roles || [];
@@ -142,7 +144,7 @@ export const authProvider: AuthBindings = {
     },
 
     getIdentity: async () => {
-        const user = localStorage.getItem("user");
+        const user = localStorage.getItem(config.USER_STORAGE_KEY);
         if (user) {
             return JSON.parse(user);
         }
@@ -155,7 +157,7 @@ export const authProvider: AuthBindings = {
         // Handle 401 Unauthorized errors
         if (error.status === 401) {
             localStorage.removeItem(TOKEN_KEY);
-            localStorage.removeItem("user");
+            localStorage.removeItem(config.USER_STORAGE_KEY);
 
             return {
                 logout: true,

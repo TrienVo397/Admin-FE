@@ -62,6 +62,15 @@ export const HoverExpandSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
 
     // State for hover functionality
     const [isHovered, setIsHovered] = useState(false);
+    const [initialCollapseSet, setInitialCollapseSet] = useState(false);
+
+    // Force sidebar to be collapsed by default for hover functionality - only once
+    React.useEffect(() => {
+        if (!initialCollapseSet) {
+            setSiderCollapsed(true);
+            setInitialCollapseSet(true);
+        }
+    }, [setSiderCollapsed, initialCollapseSet]);
 
     const isExistAuthentication = useIsExistAuthentication();
     const direction = useContext(ConfigProvider.ConfigContext)?.direction;
@@ -85,7 +94,13 @@ export const HoverExpandSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
     const RenderToTitle = TitleFromProps ?? TitleFromContext ?? ThemedTitleV2;
 
     // Determine effective collapsed state (collapsed unless hovered)
+    // The sidebar should be collapsed by default and only expand on hover
     const effectiveCollapsed = siderCollapsed && !isHovered;
+    
+    // Debug logging
+    React.useEffect(() => {
+        console.log('State update - siderCollapsed:', siderCollapsed, 'isHovered:', isHovered, 'effectiveCollapsed:', effectiveCollapsed);
+    }, [siderCollapsed, isHovered, effectiveCollapsed]);
 
     const renderTreeView = (tree: ITreeMenu[], selectedKey?: string) => {
         return tree.map((item: ITreeMenu) => {
@@ -323,8 +338,14 @@ export const HoverExpandSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
                 collapsedWidth={80}
                 breakpoint="lg"
                 trigger={null}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                onMouseEnter={() => {
+                    console.log('Sidebar hover enter - siderCollapsed:', siderCollapsed, 'isHovered:', isHovered);
+                    setIsHovered(true);
+                }}
+                onMouseLeave={() => {
+                    console.log('Sidebar hover leave - siderCollapsed:', siderCollapsed, 'isHovered:', isHovered);
+                    setIsHovered(false);
+                }}
             >
                 <div
                     style={{

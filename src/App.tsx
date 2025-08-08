@@ -6,7 +6,6 @@ import { DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import {
-  AuthPage,
   ErrorComponent,
   useNotificationProvider,
   ThemedLayoutV2,
@@ -41,7 +40,7 @@ import {
 
 import { AppIcon } from "./components/app-icon";
 import { ColorModeContextProvider } from "./contexts/color-mode";
-import { Header, HoverExpandSider } from "./components";
+import { Header, HoverExpandSider, CustomLoginPage } from "./components";
 
 function App() {
   return (
@@ -144,18 +143,7 @@ function App() {
                     >
                       <Route
                         path="/login"
-                        element={
-                          <AuthPage
-                            type="login"
-                            title={<AppIcon />}
-                            formProps={{
-                              initialValues: {
-                                email: "",
-                                password: "",
-                              },
-                            }}
-                          />
-                        }
+                        element={<CustomLoginPage />}
                       />
                     </Route>
                   )}
