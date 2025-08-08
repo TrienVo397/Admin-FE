@@ -96,7 +96,7 @@ export const HoverExpandSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
     // Determine effective collapsed state (collapsed unless hovered)
     // The sidebar should be collapsed by default and only expand on hover
     const effectiveCollapsed = siderCollapsed && !isHovered;
-    
+
     // Debug logging
     React.useEffect(() => {
         console.log('State update - siderCollapsed:', siderCollapsed, 'isHovered:', isHovered, 'effectiveCollapsed:', effectiveCollapsed);
@@ -223,29 +223,62 @@ export const HoverExpandSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
             <>
                 {dashboard}
                 {items}
-                {logout}
             </>
         );
     };
 
     const renderMenu = () => {
         return (
-            <Menu
-                selectedKeys={selectedKey ? [selectedKey] : []}
-                defaultOpenKeys={defaultOpenKeys}
-                mode="inline"
-                style={{
-                    paddingTop: "8px",
-                    border: "none",
-                    overflow: "auto",
-                    height: "calc(100% - 72px)",
-                }}
-                onClick={() => {
-                    setMobileSiderOpen(false);
-                }}
-            >
-                {renderSider()}
-            </Menu>
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "calc(100% - 72px)"
+            }}>
+                <Menu
+                    selectedKeys={selectedKey ? [selectedKey] : []}
+                    defaultOpenKeys={defaultOpenKeys}
+                    mode="inline"
+                    style={{
+                        paddingTop: "8px",
+                        border: "none",
+                        overflow: "auto",
+                        flex: 1,
+                    }}
+                    onClick={() => {
+                        setMobileSiderOpen(false);
+                    }}
+                >
+                    {renderSider()}
+                </Menu>
+                {logout && (
+                    <div style={{
+                        marginTop: "auto",
+                        borderTop: `1px solid ${token.colorBorder}`,
+                        paddingTop: "8px"
+                    }}>
+                        <Menu
+                            mode="inline"
+                            style={{
+                                border: "none",
+                                background: "transparent",
+                            }}
+                            selectedKeys={[]}
+                        >
+                            <Menu.Item
+                                key="logout"
+                                onClick={() => handleLogout()}
+                                icon={<LogoutOutlined style={{ color: '#ff4d4f' }} />}
+                                style={{
+                                    color: '#ff4d4f',
+                                    fontWeight: 500
+                                }}
+                            >
+                                {translate("buttons.logout", "Logout")}
+                            </Menu.Item>
+                        </Menu>
+                    </div>
+                )}
+            </div>
         );
     };
 

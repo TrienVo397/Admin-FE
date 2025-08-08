@@ -84,7 +84,7 @@ export const config = {
             password: "admin123",
         },
         TEST: {
-            username: "testuser", 
+            username: "testuser",
             password: "test123",
         },
     },
