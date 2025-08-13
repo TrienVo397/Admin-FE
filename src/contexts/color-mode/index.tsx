@@ -55,6 +55,15 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
         theme={{
           ...RefineThemes.Blue,
           algorithm: mode === "light" ? defaultAlgorithm : darkAlgorithm,
+          token: {
+            ...RefineThemes.Blue.token,
+            // Power blue background colors only for light mode
+            ...(mode === "light" && {
+              // colorBgContainer: "#dbeafe", // Light power blue for content areas
+              // colorBgElevated: "#bfdbfe",  // Slightly darker blue for elevated elements
+              // colorBgLayout: "#eff6ff",    // Very light blue for layout background
+            }),
+          },
         }}
       >
         {children}
