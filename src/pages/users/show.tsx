@@ -1,5 +1,5 @@
 import { Show } from "@refinedev/antd";
-import { useShow, useList } from "@refinedev/core";
+import { useShow, useList, useNavigation } from "@refinedev/core";
 import { Typography, Card, Row, Col, Tag, Table, Space } from "antd";
 import { UserOutlined, MailOutlined, CalendarOutlined, ProjectOutlined } from "@ant-design/icons";
 import React from "react";
@@ -9,6 +9,7 @@ const { Title, Text } = Typography;
 export const UserShow = () => {
   const { queryResult } = useShow({});
   const { data, isLoading } = queryResult;
+  const { show } = useNavigation();
 
   const record = data?.data;
 
@@ -31,10 +32,15 @@ export const UserShow = () => {
       title: "Project Name",
       dataIndex: "name",
       key: "name",
-      render: (text: string) => (
+      render: (text: string, record: Record<string, unknown>) => (
         <Space>
           <ProjectOutlined />
-          <strong>{text}</strong>
+          <a
+            onClick={() => show("projects", record.id as string)}
+            style={{ fontWeight: "bold", cursor: "pointer" }}
+          >
+            {text}
+          </a>
         </Space>
       ),
     },
@@ -48,16 +54,7 @@ export const UserShow = () => {
         </Text>
       ),
     },
-    {
-      title: "Repository",
-      dataIndex: "repo_path",
-      key: "repo_path",
-      render: (path: string) => (
-        <Text code style={{ fontSize: "12px" }}>
-          {path || "Not specified"}
-        </Text>
-      ),
-    },
+    
     {
       title: "Start Date",
       dataIndex: "start_date",

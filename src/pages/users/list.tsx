@@ -1,14 +1,11 @@
 import {
   DateField,
-  DeleteButton,
-  EditButton,
   FilterDropdown,
   List,
-  ShowButton,
   useTable,
 } from "@refinedev/antd";
-import { type BaseRecord } from "@refinedev/core";
-import { Space, Table, Input, Select, Tag } from "antd";
+import { useNavigation } from "@refinedev/core";
+import { Table, Input, Select, Tag } from "antd";
 import React from "react";
 
 export const UserList = () => {
@@ -40,12 +37,31 @@ export const UserList = () => {
     },
   });
 
+  const { show } = useNavigation();
+
   return (
     <List
       createButtonProps={{ children: "Create User" }}
       title="Users"
     >
-      <Table {...tableProps} rowKey="id">
+      <Table
+        {...tableProps}
+        rowKey="id"
+        onRow={(record) => ({
+          onClick: () => {
+            if (record.id) {
+              show("users", record.id);
+            }
+          },
+          style: { cursor: "pointer" },
+          onMouseEnter: (e) => {
+            e.currentTarget.style.backgroundColor = "#f5f5f5";
+          },
+          onMouseLeave: (e) => {
+            e.currentTarget.style.backgroundColor = "";
+          },
+        })}
+      >
         <Table.Column dataIndex="id" title={"ID"} />
         <Table.Column
           dataIndex="username"
@@ -126,17 +142,6 @@ export const UserList = () => {
           dataIndex={["created_at"]}
           title={"Created at"}
           render={(value: string) => <DateField value={value} />}
-        />
-        <Table.Column
-          title={"Actions"}
-          dataIndex="actions"
-          render={(_, record: BaseRecord) => (
-            <Space>
-              <EditButton hideText size="small" recordItemId={record.id} />
-              <ShowButton hideText size="small" recordItemId={record.id} />
-              <DeleteButton hideText size="small" recordItemId={record.id} />
-            </Space>
-          )}
         />
       </Table>
     </List>

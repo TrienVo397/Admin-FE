@@ -1,14 +1,11 @@
 import {
   DateField,
-  DeleteButton,
-  EditButton,
   FilterDropdown,
   List,
-  ShowButton,
   useTable,
 } from "@refinedev/antd";
-import { type BaseRecord } from "@refinedev/core";
-import { Space, Table, Input, Tag } from "antd";
+import { useNavigation } from "@refinedev/core";
+import { Table, Input, Tag } from "antd";
 import React from "react";
 
 export const ProjectList = () => {
@@ -25,22 +22,36 @@ export const ProjectList = () => {
           field: "note",
           operator: "contains",
           value: params.note,
-        },
-        {
-          field: "repo_path",
-          operator: "contains",
-          value: params.repo_path,
         }
       ];
     },
   });
+
+  const { show } = useNavigation();
 
   return (
     <List
       createButtonProps={{ children: "Create Project" }}
       title="Projects"
     >
-      <Table {...tableProps} rowKey="id">
+      <Table
+        {...tableProps}
+        rowKey="id"
+        onRow={(record) => ({
+          onClick: () => {
+            if (record.id) {
+              show("projects", record.id);
+            }
+          },
+          style: { cursor: "pointer" },
+          onMouseEnter: (e) => {
+            e.currentTarget.style.backgroundColor = "#f5f5f5";
+          },
+          onMouseLeave: (e) => {
+            e.currentTarget.style.backgroundColor = "";
+          },
+        })}
+      >
         <Table.Column dataIndex="id" title={"ID"} />
         <Table.Column
           dataIndex="name"
@@ -62,20 +73,6 @@ export const ProjectList = () => {
           filterDropdown={(props) => (
             <FilterDropdown {...props}>
               <Input placeholder="Search note" />
-            </FilterDropdown>
-          )}
-        />
-        <Table.Column
-          dataIndex="repo_path"
-          title={"Repository Path"}
-          render={(value: string) => (
-            <Tag color="blue" style={{ fontSize: "11px" }}>
-              {value || "Not specified"}
-            </Tag>
-          )}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Input placeholder="Search repository path" />
             </FilterDropdown>
           )}
         />
@@ -102,17 +99,6 @@ export const ProjectList = () => {
           dataIndex={["created_at"]}
           title={"Created at"}
           render={(value: string) => <DateField value={value} />}
-        />
-        <Table.Column
-          title={"Actions"}
-          dataIndex="actions"
-          render={(_, record: BaseRecord) => (
-            <Space>
-              <EditButton hideText size="small" recordItemId={record.id} />
-              <ShowButton hideText size="small" recordItemId={record.id} />
-              <DeleteButton hideText size="small" recordItemId={record.id} />
-            </Space>
-          )}
         />
       </Table>
     </List>

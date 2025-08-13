@@ -101,7 +101,7 @@ export const CustomLoginPage: React.FC = () => {
             >
               <Form.Item
                 name="username"
-                label={translate("pages.login.fields.username", "Username")}
+                label={translate("pages.login.fields.username", "User Name")}
                 rules={[
                   {
                     required: true,

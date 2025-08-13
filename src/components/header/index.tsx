@@ -15,9 +15,12 @@ const { Text } = Typography;
 const { useToken } = theme;
 
 type IUser = {
-  id: number;
-  name: string;
-  avatar: string;
+  id: string;
+  username: string;
+  full_name?: string;
+  email: string;
+  avatar?: string;
+  roles?: string[];
 };
 
 export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
@@ -30,7 +33,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
   const headerStyles: React.CSSProperties = {
     backgroundColor: token.colorBgElevated,
     display: "flex",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
     alignItems: "center",
     padding: "0px 24px",
     height: "64px",
@@ -44,19 +47,16 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
 
   return (
     <AntdLayout.Header style={headerStyles}>
-      
-      <Space>
-        <Switch
-          checkedChildren="🌛"
-          unCheckedChildren="🔆"
-          onChange={() => setMode(mode === "light" ? "dark" : "light")}
-          defaultChecked={mode === "dark"}
-        />
-        <Space style={{ marginLeft: "8px" }} size="middle">
-          {user?.name && <Text strong>{user.name}</Text>}
-          {user?.avatar && <Avatar src={user?.avatar} alt={user?.name} />}
-        </Space>
+      <Space >
+        {user && <Text strong>Hello, {user.full_name || user.username || "User"}</Text>}
+        {user?.avatar && <Avatar src={user.avatar} alt={user.full_name || user.username} />}
       </Space>
+      <Switch
+        checkedChildren="🌛"
+        unCheckedChildren="🔆"
+        onChange={() => setMode(mode === "light" ? "dark" : "light")}
+        defaultChecked={mode === "dark"}
+      />
     </AntdLayout.Header>
   );
 };
