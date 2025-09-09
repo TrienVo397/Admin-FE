@@ -25,19 +25,21 @@ const handleResponse = async (response: Response) => {
 export const apiDataProvider: DataProvider = {
     getApiUrl: () => API_URL,
 
-    // Get list of resources with pagination and filtering
+    // Get list of resources with admin endpoint for users
     getList: async ({ resource, pagination, filters, sorters }) => {
-        const url = new URL(`${API_URL}/${resource}/`);
-
-        // Add pagination - FastAPI uses page and size parameters
+        let url;
+        if (resource === "users") {
+            url = new URL(`${API_URL}/admin/users/all`);
+        } else {
+            url = new URL(`${API_URL}/${resource}/`);
+        }
+        // ...existing code for pagination, filters, sorting...
         if (pagination) {
             const current = pagination.current || 1;
             const pageSize = pagination.pageSize || 10;
             url.searchParams.append("page", String(current));
             url.searchParams.append("size", String(pageSize));
         }
-
-        // Add filters
         if (filters) {
             filters.forEach((filter) => {
                 if (filter.operator === "eq") {
@@ -47,36 +49,27 @@ export const apiDataProvider: DataProvider = {
                 }
             });
         }
-
-        // Add sorting
         if (sorters && sorters.length > 0) {
             const sortBy = sorters[0];
             url.searchParams.append("sort_by", sortBy.field);
             url.searchParams.append("sort_order", sortBy.order === "asc" ? "asc" : "desc");
         }
-
         try {
             const response = await fetch(url.toString(), {
                 headers: getAuthHeaders(),
             });
-
             const data = await handleResponse(response);
-
-            // Handle different response formats from FastAPI
             if (data.items && typeof data.total === 'number') {
-                // Paginated response format
                 return {
                     data: data.items,
                     total: data.total,
                 };
             } else if (Array.isArray(data)) {
-                // Direct array response
                 return {
                     data: data,
                     total: data.length,
                 };
             } else {
-                // Single item response (shouldn't happen for getList)
                 return {
                     data: [data],
                     total: 1,
@@ -104,17 +97,21 @@ export const apiDataProvider: DataProvider = {
         }
     },
 
-    // Create new resource
+    // Create new resource (admin endpoint for users)
     create: async ({ resource, variables }) => {
         try {
-            const response = await fetch(`${API_URL}/${resource}/`, {
+            let url;
+            if (resource === "users") {
+                url = `${API_URL}/admin/users/create`;
+            } else {
+                url = `${API_URL}/${resource}/`;
+            }
+            const response = await fetch(url, {
                 method: "POST",
                 headers: getAuthHeaders(),
                 body: JSON.stringify(variables),
             });
-
             const data = await handleResponse(response);
-
             return { data };
         } catch (error) {
             console.error(`Error creating ${resource}:`, error);
@@ -122,17 +119,21 @@ export const apiDataProvider: DataProvider = {
         }
     },
 
-    // Update existing resource
+    // Update existing resource (admin endpoint for users)
     update: async ({ resource, id, variables }) => {
         try {
-            const response = await fetch(`${API_URL}/${resource}/${id}`, {
+            let url;
+            if (resource === "users") {
+                url = `${API_URL}/admin/users/${id}`;
+            } else {
+                url = `${API_URL}/${resource}/${id}`;
+            }
+            const response = await fetch(url, {
                 method: "PUT",
                 headers: getAuthHeaders(),
                 body: JSON.stringify(variables),
             });
-
             const data = await handleResponse(response);
-
             return { data };
         } catch (error) {
             console.error(`Error updating ${resource} ${id}:`, error);
@@ -140,21 +141,23 @@ export const apiDataProvider: DataProvider = {
         }
     },
 
-    // Delete resource
+    // Delete resource (admin endpoint for users)
     deleteOne: async ({ resource, id }) => {
         try {
-            const response = await fetch(`${API_URL}/${resource}/${id}`, {
+            let url;
+            if (resource === "users") {
+                url = `${API_URL}/admin/users/${id}`;
+            } else {
+                url = `${API_URL}/${resource}/${id}`;
+            }
+            const response = await fetch(url, {
                 method: "DELETE",
                 headers: getAuthHeaders(),
             });
-
-            // Delete might return empty response
             if (response.status === 204) {
                 return { data: { id } };
             }
-
             const data = await handleResponse(response);
-
             return { data };
         } catch (error) {
             console.error(`Error deleting ${resource} ${id}:`, error);

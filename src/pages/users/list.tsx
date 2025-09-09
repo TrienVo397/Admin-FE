@@ -4,11 +4,27 @@ import {
   List,
   useTable,
 } from "@refinedev/antd";
-import { useNavigation } from "@refinedev/core";
-import { Table, Input, Select, Tag } from "antd";
+import { useNavigation, useDelete } from "@refinedev/core";
+import { Table, Input, Button, Modal } from "antd";
 import React from "react";
 
 export const UserList = () => {
+  const { mutate } = useDelete();
+  const handleDelete = (id: string) => {
+    Modal.confirm({
+      title: "Delete User",
+      content: `Are you sure you want to delete this user?`,
+      okText: "Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk: async () => {
+        mutate({
+          resource: "users",
+          id,
+        });
+      },
+    });
+  };
   const { tableProps } = useTable({
     syncWithLocation: true,
     onSearch: (params: Record<string, unknown>) => {
@@ -91,57 +107,21 @@ export const UserList = () => {
           )}
         />
         <Table.Column
-          dataIndex="notes"
-          title={"Notes"}
-          render={(text: string) => (
-            <span style={{
-              color: text ? '#333' : '#999',
-              fontStyle: text ? 'normal' : 'italic'
-            }}>
-              {text || 'No notes'}
-            </span>
-          )}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Input placeholder="Search notes" />
-            </FilterDropdown>
-          )}
-        />
-        <Table.Column
-          dataIndex="roles"
-          title={"Roles"}
-          render={(roles: string[]) => (
-            <div>
-              {roles?.map((role: string) => (
-                <Tag key={role} color="blue" style={{ marginBottom: 2 }}>
-                  {role.charAt(0).toUpperCase() + role.slice(1).replace('_', ' ')}
-                </Tag>
-              )) || <span style={{ color: '#999', fontStyle: 'italic' }}>No roles</span>}
-            </div>
-          )}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Select
-                style={{ width: 200 }}
-                placeholder="Select role"
-                allowClear
-                options={[
-                  { value: "admin", label: "Admin" },
-                  { value: "user", label: "User" },
-                  { value: "tester", label: "Tester" },
-                  { value: "developer", label: "Developer" },
-                  { value: "analyst", label: "Analyst" },
-                  { value: "project_manager", label: "Project Manager" },
-                  { value: "team_lead", label: "Team Lead" },
-                ]}
-              />
-            </FilterDropdown>
-          )}
-        />
-        <Table.Column
-          dataIndex={["created_at"]}
+          dataIndex={"created_at"}
           title={"Created at"}
           render={(value: string) => <DateField value={value} />}
+        />
+        <Table.Column
+          title="Actions"
+          dataIndex="actions"
+          render={(_, record) => (
+            <Button danger onClick={e => {
+              e.stopPropagation();
+              handleDelete(record.id);
+            }}>
+              Delete
+            </Button>
+          )}
         />
       </Table>
     </List>

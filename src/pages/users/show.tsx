@@ -112,20 +112,7 @@ export const UserShow = () => {
               <Col xs={24} sm={12} md={8}>
                 <Card size="small" title="Profile Information">
                   <Space direction="vertical" style={{ width: "100%" }}>
-                    <div>
-                      <Text strong>Notes: </Text>
-                      <Text>{record.notes || "No notes available"}</Text>
-                    </div>
-                    <div>
-                      <Text strong>Roles: </Text>
-                      <div style={{ marginTop: 4 }}>
-                        {record.roles?.map((role: string) => (
-                          <Tag key={role} color="blue" style={{ marginBottom: 4 }}>
-                            {role.charAt(0).toUpperCase() + role.slice(1).replace('_', ' ')}
-                          </Tag>
-                        )) || <Text type="secondary">No roles assigned</Text>}
-                      </div>
-                    </div>
+                    {/* Removed Notes and Roles display */}
                   </Space>
                 </Card>
               </Col>

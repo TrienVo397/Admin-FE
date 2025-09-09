@@ -8,41 +8,43 @@ export const TOKEN_KEY = config.TOKEN_STORAGE_KEY;
 const API_URL = config.API_URL;
 
 export const authProvider: AuthBindings = {
-    login: async ({ username, password }) => {
+    login: async ({ username, email, password }) => {
         try {
-            // Use the correct FastAPI login endpoint
-            const response = await fetch(`${API_URL}/users/token`, {
+            // Use the correct admin login endpoint and format
+            // Send as application/x-www-form-urlencoded with username and password fields
+            const formBody = new URLSearchParams();
+            if (email) {
+                formBody.append("username", email);
+            } else {
+                formBody.append("username", username);
+            }
+            formBody.append("password", password);
+
+            const loginUrl = `${API_URL}/admin/login`;
+            console.log('Login URL:', loginUrl);
+            console.log('Form data:', formBody.toString());
+
+            const response = await fetch(loginUrl, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded",
                 },
-                body: JSON.stringify({
-                    username: username, // FastAPI uses username field for login
-                    password,
-                }),
+                body: formBody.toString(),
             });
+
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
 
             if (response.ok) {
                 const data = await response.json();
-
-                // Store the access token
+                console.log('Login successful, response data:', data);
+                // Store the access token and admin info
                 localStorage.setItem(TOKEN_KEY, data.access_token);
-
-                // Get user profile after successful login
-                try {
-                    const userResponse = await fetch(`${API_URL}/users/whoami`, {
-                        headers: {
-                            "Authorization": `Bearer ${data.access_token}`,
-                        },
-                    });
-
-                    if (userResponse.ok) {
-                        const userData = await userResponse.json();
-                        localStorage.setItem(config.USER_STORAGE_KEY, JSON.stringify(userData));
-                    }
-                } catch (error) {
-                    console.warn("Could not fetch user profile:", error);
-                }
+                localStorage.setItem(config.USER_STORAGE_KEY, JSON.stringify({
+                    admin_id: data.admin_id,
+                    admin_username: data.admin_username,
+                    token_type: data.token_type,
+                }));
 
                 notification.success({
                     message: "Login Successful",
@@ -54,7 +56,9 @@ export const authProvider: AuthBindings = {
                     redirectTo: "/",
                 };
             } else {
-                const errorData = await response.json();
+                const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }));
+                console.log('Login failed, error data:', errorData);
+                console.log('Response status:', response.status);
                 return {
                     success: false,
                     error: {
@@ -93,26 +97,21 @@ export const authProvider: AuthBindings = {
 
     check: async () => {
         const token = localStorage.getItem(TOKEN_KEY);
-
         if (token) {
-            // Verify token with FastAPI whoami endpoint
+            // Validate token with admin endpoint
             try {
-                const response = await fetch(`${API_URL}/users/whoami`, {
+                const response = await fetch(`${API_URL}/admin/whoami`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                     },
                 });
-
                 if (response.ok) {
-                    const userData = await response.json();
-                    // Update stored user data
-                    localStorage.setItem(config.USER_STORAGE_KEY, JSON.stringify(userData));
-                    
+                    const adminData = await response.json();
+                    localStorage.setItem(config.USER_STORAGE_KEY, JSON.stringify(adminData));
                     return {
                         authenticated: true,
                     };
                 } else {
-                    // Token is invalid, remove it
                     localStorage.removeItem(TOKEN_KEY);
                     localStorage.removeItem(config.USER_STORAGE_KEY);
                     return {
@@ -121,13 +120,11 @@ export const authProvider: AuthBindings = {
                     };
                 }
             } catch (error) {
-                // Network error, assume token is valid for offline usage
                 return {
                     authenticated: true,
                 };
             }
         }
-
         return {
             authenticated: false,
             redirectTo: "/login",

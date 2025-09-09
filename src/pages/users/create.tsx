@@ -39,36 +39,7 @@ export const UserCreate = () => {
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          label={"Notes"}
-          name="notes"
-        >
-          <TextArea rows={3} placeholder="Enter notes about this user" />
-        </Form.Item>
-        <Form.Item
-          label={"Roles"}
-          name="roles"
-          rules={[
-            {
-              required: true,
-              message: "Please select at least one role",
-            },
-          ]}
-        >
-          <Select
-            mode="multiple"
-            placeholder="Select user roles"
-            options={[
-              { value: "admin", label: "Admin" },
-              { value: "user", label: "User" },
-              { value: "tester", label: "Tester" },
-              { value: "developer", label: "Developer" },
-              { value: "analyst", label: "Analyst" },
-              { value: "project_manager", label: "Project Manager" },
-              { value: "team_lead", label: "Team Lead" },
-            ]}
-          />
-        </Form.Item>
+  {/* Removed Notes and Roles fields */}
         <Form.Item
           label={"Password"}
           name="password"
